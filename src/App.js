@@ -1,23 +1,31 @@
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import { GlobalStyles } from "./Components/Styles/Global";
+import Header from "./Components/Header";
+import Footer from "./Components/Footer";
+import Diary from "./Components/Diary";
+import Recipes from "./Components/Recipes"
+import HomePage from "./Components/HomePage";
+import { Container } from "./Components/Styles/Container";
+import { useState } from "react";
 
 function App() {
+    // array of choosed products and servings 
+  const [productList, setProductList] = useState([]);
+  const [isMealSubmited, setIsMealSubmited] = useState(false);
+  const [headerHeight, setHeaderHeight] = useState();
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <GlobalStyles/>
+      <BrowserRouter>
+        <Header setHeaderHeight={setHeaderHeight} headerHeight={headerHeight}/>
+          <Routes>
+            <Route path="/Diary" element={<Diary productList={productList} isMealSubmited={isMealSubmited}/>}/>
+            <Route path="/Recipes" element={<Recipes/>}/>
+            <Route path="/HomePage" element={<HomePage productList={productList} setProductList={setProductList} setIsMealSubmited={setIsMealSubmited} isMealSubmited={isMealSubmited}/>} />
+          </Routes>
+        <Footer/>
+      </BrowserRouter>
     </div>
   );
 }

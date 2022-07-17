@@ -1,0 +1,6 @@
+/* Color Theme Swatches in Hex */
+.MM-2-1-hex { color: #10C8C2; }
+.MM-2-2-hex { color: #FFCE61; }
+.MM-2-3-hex { color: #EE6C45; }
+.MM-2-4-hex { color: #65458C; }
+.MM-2-5-hex { color: #333780; }
