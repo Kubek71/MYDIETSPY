@@ -1,3 +1,11 @@
+# About the app
+
+Diet diary, when users can count calories from each eating day, save their recipies and follow their daily diet progress.
+
+Made with React.js, styled with Styled Components.
+
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
