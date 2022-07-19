@@ -21,7 +21,7 @@ export default function Header(props) {
   return (
     <StyledHeader ref={headerOffsetHeight}>
         <Box className="logo-box">
-            <Link to="HomePage">
+            <Link to="/">
                 <img src={logo}></img>
             </Link>
             

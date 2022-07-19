@@ -22,7 +22,7 @@ h1 {
 }
 
 .form-container {
-    heigth: 100%;
+    height: 100%;
     margin: 0 auto;
     max-width: 800px;
     display: flex;

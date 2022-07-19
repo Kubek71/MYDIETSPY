@@ -9,6 +9,7 @@ export const GlobalStyles = createGlobalStyle`
     box-sizing: border-box;
 }
 
+
 html,body, #root {
     min-height: 100vh;
 }
@@ -28,10 +29,16 @@ input {
     border-bottom: 2px solid #fff;
 }
 
+a {
+    transition: transform 300ms ease;
+}
+
+a:hover, a:focus {
+    transform: scale(1.1);
+}
 
 `
 export const Text = styled.span`
-color: #fff;
 font-family: roboto;
 text-align: center;
 font-size: 1rem;

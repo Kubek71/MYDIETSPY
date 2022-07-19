@@ -24,7 +24,8 @@ div a {
 
 span {
     display: block;
-    font-size 12px;
+    font-size: 12px;
+    color: #fff;
     
 }
 `

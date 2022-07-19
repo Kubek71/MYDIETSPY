@@ -8,7 +8,7 @@ export default function Diary(props) {
     <DiaryStyled>
         <Box>
           <h2>
-            16/07/2022
+            19/07/2022
           </h2>
         </Box>
         { props.isMealSubmited === true &&

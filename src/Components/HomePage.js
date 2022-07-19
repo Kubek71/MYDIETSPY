@@ -6,12 +6,13 @@ import { Text, Button } from "./Styles/Global";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { auth, database } from "../Helpers/FirebaseConfig";
+import { ref, set } from "firebase/database";
 
 export default function HomePage(props) {
-
-    // keyword from product input 
+  // keyword from product input
   const [inputKeyword, setInputKeyword] = useState("");
-    // product from food API
+  // product from food API
   const [product, setProduct] = useState();
   const [countKcal, setCountKcal] = useState();
   const [isProductSelected, setIsProductSelected] = useState(false);
@@ -19,8 +20,7 @@ export default function HomePage(props) {
   const gramature = 0.01;
 
   useEffect(() => {
-
-      // getting data from food API, whenever user types in inputfield
+    // getting data from food API, whenever user types in inputfield
     if (inputKeyword && inputKeyword.length > 2) {
       axios
         .get(
@@ -35,40 +35,57 @@ export default function HomePage(props) {
     }
   }, [inputKeyword]);
 
-  useEffect(()=> {
+  useEffect(() => {
     // counting amount of kcal whenever array of product lists updates
     count();
-  }, [props.productList])
+  }, [props.productList]);
 
-    // Adding choosed products to a meal on submitting the form
+  // Adding choosed products to a meal on submitting the form
   const createMeal = (data, event) => {
     setIsProductSelected(true);
     setProduct(null);
-    const currentProduct = product[0].food
-    const currentServing = data.serving * gramature
-    props.setProductList((prevState) => [...prevState, {
-      product_name: currentProduct.label,
-      product_kcal: currentProduct.nutrients.ENERC_KCAL,
-      product_serving: data.serving * gramature,
-      product_kcalInServing: Math.floor(currentProduct.nutrients.ENERC_KCAL * currentServing),
-    }]);
-      //clearing input fields 
-    Array.from(event.target).find(element => element.id === "product").value = '';
-    Array.from(event.target).find(element => element.id === "serving-input").value = '';
+    const currentProduct = product[0].food;
+    const currentServing = data.serving * gramature;
+    props.setProductList((prevState) => [
+      ...prevState,
+      {
+        product_name: currentProduct.label,
+        product_kcal: currentProduct.nutrients.ENERC_KCAL,
+        product_serving: data.serving * gramature,
+        product_kcalInServing: Math.floor(
+          currentProduct.nutrients.ENERC_KCAL * currentServing
+        ),
+      },
+    ]);
+    //clearing input fields
+    Array.from(event.target).find((element) => element.id === "product").value =
+      "";
+    Array.from(event.target).find(
+      (element) => element.id === "serving-input"
+    ).value = "";
   };
 
+  // function writeUserData() {
+    
+  //   push(ref(database, `users/${auth.userId}/meals/`), {
+  //     product_name: props.productList.product_name,
+  //     product_kcal: props.productList.product_name,
+  //   });
+  // }
+
   const submitMeal = () => {
-    if(props.productList.length > 0) {
-      props.setIsMealSubmited(true)
+    if (props.productList.length > 0) {
+      props.setIsMealSubmited(true);
+      setIsProductSelected(false);
     }
-  }
+  };
 
   const count = () => {
-    const productKcalAmount = props.productList.reduce((totalKcal, element)=> {
-      return Math.floor(totalKcal + element.product_kcalInServing)
-    }, 0)
+    const productKcalAmount = props.productList.reduce((totalKcal, element) => {
+      return Math.floor(totalKcal + element.product_kcalInServing);
+    }, 0);
     setCountKcal(productKcalAmount);
-  }
+  };
 
   return (
     <HomePageStyled>
@@ -84,7 +101,8 @@ export default function HomePage(props) {
               {...register("inputKeyword", {
                 onChange: (e) => {
                   if (e.target.value.length > 2) {
-                    setInputKeyword(e.target.value)}
+                    setInputKeyword(e.target.value);
+                  }
                 },
               })}
             />
@@ -123,14 +141,17 @@ export default function HomePage(props) {
                     <Text>{element.product_serving * 100}G</Text>
                   </Box>
                   <Text>
-                    Kcal:{Math.round(element.product_kcal * element.product_serving)}
+                    Kcal:
+                    {Math.round(element.product_kcal * element.product_serving)}
                   </Text>
                 </Box>
               );
             })}
         </ProductBox>
         {props.productList.length > 0 && (
-          <Button className="newMeal-button" onClick={submitMeal}>ADD MEAL</Button>
+          <Button className="newMeal-button" onClick={submitMeal}>
+            ADD MEAL
+          </Button>
         )}
         <Text>Summary: {countKcal}</Text>
       </div>
