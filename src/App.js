@@ -8,6 +8,7 @@ import HomePage from "./Components/HomePage";
 import LandingPage from "./Components/LandingPage";
 import { Container } from "./Components/Styles/Container";
 import { useState } from "react";
+import { month, year, day } from "./Helpers/CurrentDate";
 import { auth } from './Helpers/FirebaseConfig'
 
 
@@ -17,6 +18,7 @@ function App() {
   const [isMealSubmited, setIsMealSubmited] = useState(false);
   const [headerHeight, setHeaderHeight] = useState();
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
+  let currentDate = `${day} ${month} ${year}`;
 
   return (
     <div className="App">
@@ -30,9 +32,9 @@ function App() {
         <BrowserRouter>
         <Header setHeaderHeight={setHeaderHeight} headerHeight={headerHeight}/>
           <Routes>
-            <Route path="/Diary" element={<Diary isMealSubmited={isMealSubmited}/>}/>
+            <Route path="/Diary" element={<Diary isMealSubmited={isMealSubmited} currentDate={currentDate}/>}/>
             <Route path="/Recipes" element={<Recipes/>}/>
-            <Route path="/" element={<HomePage setIsMealSubmited={setIsMealSubmited} isMealSubmited={isMealSubmited}/>} />
+            <Route path="/" element={<HomePage setIsMealSubmited={setIsMealSubmited} isMealSubmited={isMealSubmited} currentDate={currentDate}/>} />
           </Routes>
         <Footer/>
       </BrowserRouter>

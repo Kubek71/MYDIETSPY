@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { auth, database } from "../Helpers/FirebaseConfig";
 import { ref, set, push, onValue} from "firebase/database";
-import { month, year, day } from "../Helpers/CurrentDate";
+
 
 export default function HomePage(props) {
   // list od products in meal
@@ -21,7 +21,8 @@ export default function HomePage(props) {
   const [isProductSelected, setIsProductSelected] = useState(false);
   const { register, handleSubmit } = useForm();
   const gramature = 0.01;
-  let currentDate = `${day} ${month} ${year}`;
+  let currentDate = props.currentDate;
+
 
   useEffect(() => {
     // getting data from food API, whenever user types in inputfield
