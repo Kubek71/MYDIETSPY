@@ -18,7 +18,8 @@ const firebaseConfig = {
   storageBucket: "react-mydietspy.appspot.com",
   messagingSenderId: "829063713066",
   appId: "1:829063713066:web:ea31548cc28e3f7cfa4e53",
-  measurementId: "G-1BJQMB2BNJ"
+  measurementId: "G-1BJQMB2BNJ",
+  databaseURL: "https://react-mydietspy-default-rtdb.europe-west1.firebasedatabase.app"
 };
 
 // Initialize Firebase
