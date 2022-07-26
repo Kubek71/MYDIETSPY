@@ -10,7 +10,7 @@ import { auth } from '../Helpers/FirebaseConfig'
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth";
 
  
-export default function LandingPage(props) {
+export default function LandingPage() {
 
     const [loginForm, setLoginForm] = useState(false);
     const [registerForm, setRegisterForm] = useState(false);
@@ -28,8 +28,7 @@ export default function LandingPage(props) {
             // Signed in 
             const user = userCredential.user;
             console.log('Udalo sie zalogowac: ', user)
-            props.setIsUserLoggedIn(true);
-            
+            window.location.replace('/')
         })
         .catch((error) => {
             const errorCode = error.code;
@@ -45,7 +44,7 @@ export default function LandingPage(props) {
             (userCredentials) => {
               const user = userCredentials.user;
               console.log(user + "udalo sie zarejestrowac");
-              props.setIsUserLoggedIn(true);
+              window.location.replace('/')
             }
           );
     }
