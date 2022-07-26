@@ -14,7 +14,7 @@ export default function Header(props) {
   useEffect(()=> {
 
     props.setHeaderHeight(headerOffsetHeight.current.clientHeight)
-    console.log(headerOffsetHeight.current.clientHeight)
+      // console.log(headerOffsetHeight.current.clientHeight)
 
 
   }, [headerOffsetHeight?.current?.clientHeight])

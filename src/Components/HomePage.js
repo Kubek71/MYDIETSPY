@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { auth, database } from "../Helpers/FirebaseConfig";
 import { ref, set, push, onValue} from "firebase/database";
+import { currentDate } from "../Helpers/CurrentDate";
 
 
 export default function HomePage(props) {
@@ -21,7 +22,8 @@ export default function HomePage(props) {
   const [isProductSelected, setIsProductSelected] = useState(false);
   const { register, handleSubmit } = useForm();
   const gramature = 0.01;
-  let currentDate = props.currentDate;
+  let date = currentDate()
+
 
 
   useEffect(() => {
@@ -44,6 +46,10 @@ export default function HomePage(props) {
     // counting amount of kcal whenever array of product lists updates
     count();
   }, [productList]);
+
+  useEffect(() => {
+    console.log(currentDate())
+  },[])
 
   // Adding choosed products to a meal on submitting the form
   const createMeal = (data, event) => {
@@ -74,13 +80,14 @@ export default function HomePage(props) {
   };
 
   const pushMealToDatabase = () => {
-    push(ref(database, `users/${auth.currentUser.uid}/meals/${currentDate}/`), productList);
+    push(ref(database, `users/${auth.currentUser.uid}/meals/${date}/`), productList).then((res) => {
+      alert('udalo sie')
+    });
   }
 
 
   const submitMeal = () => {
     if (productList.length > 0) {
-      props.setIsMealSubmited(true);
       setIsProductSelected(false);
       pushMealToDatabase();
       setProductList([]);
