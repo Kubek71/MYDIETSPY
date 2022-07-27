@@ -3,14 +3,17 @@ import styled from "styled-components";
 export const DiaryStyled = styled.div`
 margin-top: 2rem;
 max-width: 800px;
-h2 {
+.date-picker {
     display: block;
     text-align: center;
     padding: 0.5rem 2rem;
-    letter-spacing: 0.25rem;
+    letter-spacing: 0.125rem;
+    font-size: 1.5rem;
+    font-weight: 600;
     font-family: roboto;
     color: #10C8C2;
     border-bottom: 2px solid #EE6C45;
+    margin: 0 auto;
 }
 
 .meals-container {
