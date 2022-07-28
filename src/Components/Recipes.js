@@ -22,6 +22,9 @@ export default function Recipes() {
   const { register, handleSubmit } = useForm();
   const gramature = 0.01;
   const [newRecipe, setNewRecipe] = useState([]);
+  const [recipesFromDatabase, setRecipesFromDatabase] = useState([]);
+  const [recipeName, setRecipeName] = useState(null);
+  const [showRecipe, setShowRecipe] = useState(false);
   let date = currentDate();
 
   useEffect(() => {
@@ -43,10 +46,20 @@ export default function Recipes() {
   useEffect(() => {
     // counting amount of kcal whenever array of product lists updates
     count();
-    console.log(newRecipe);
+    const recipesRef = ref(database, `users/${auth.currentUser.uid}/recipes/`);
+
+    onValue(recipesRef, (snapshot) => {
+      if (snapshot.val() !== null || undefined) {
+        const data = Object.entries(snapshot.val());
+        setRecipesFromDatabase(data);
+      } else if (snapshot.val() == null || undefined) {
+        setRecipesFromDatabase([]);
+      }
+    });
   }, [newRecipe]);
 
   const createMeal = (data, event) => {
+    setRecipeName(data.recipe);
     setIsProductSelected(true);
     setProduct(null);
     const currentProduct = product[0].food;
@@ -72,7 +85,7 @@ export default function Recipes() {
 
   const pushRecipeToDatabase = () => {
     push(
-      ref(database, `users/${auth.currentUser.uid}/recipes/${date}/`),
+      ref(database, `users/${auth.currentUser.uid}/recipes/${recipeName}/`),
       newRecipe
     ).then((res) => {
       alert("udalo sie");
@@ -80,7 +93,7 @@ export default function Recipes() {
   };
 
   const submitRecipe = () => {
-    if (newRecipe.length > 0) {
+    if (newRecipe.length > 0 && recipeName !== null) {
       setIsProductSelected(false);
       pushRecipeToDatabase();
       setNewRecipe([]);
@@ -99,17 +112,81 @@ export default function Recipes() {
       <SectionStyled>
         <h2>You'r recipies</h2>
 
-        <Box>
-          <Text>You have no recipes yet</Text>
+        <Box className="recipes-box">
+          {recipesFromDatabase.length > 0 &&
+            recipesFromDatabase.map((element, i) => {
+              const currentRecipe = element[0];
+              console.log(currentRecipe);
+              // console.log(Object.entries(element[1])[0][1]);
+              return (
+                <Box className="meals-container">
+                  <button
+                    style={{ background: "none", border: "none" }}
+                    onClick={() => {
+                      setShowRecipe(!showRecipe);
+                    }}
+                  >
+                    <Text className="meal-number">
+                      {currentRecipe.toUpperCase()}
+                    </Text>
+                    {showRecipe === true && (
+                      <>
+                        <Box className="meal-box">
+                          {Object.entries(element[1])[0][1].map((meal) => {
+                            return (
+                              <table>
+                                <thead>
+                                  <tr>
+                                    <th>{meal.product_name}</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr>
+                                    <td>
+                                      <Text>
+                                        serving: {meal.product_serving * 100}
+                                        <strong>G</strong>
+                                      </Text>
+                                    </td>
+                                    <td>
+                                      <Text>
+                                        kcal:{" "}
+                                        <strong>
+                                          {meal.product_kcalInServing}
+                                        </strong>
+                                      </Text>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            );
+                          })}
+                        </Box>
+                        <Text className="meal-summary">
+                          TOTAL KCAL IN MEAL: <strong>555</strong>
+                        </Text>
+                      </>
+                    )}
+                  </button>
+                </Box>
+              );
+            })}
         </Box>
       </SectionStyled>
 
-      <SectionStyled>
+      <SectionStyled className="form-section">
         <h2>New recipe</h2>
         <Box className="form-container">
           <form onSubmit={handleSubmit(createMeal)}>
             <Box className="product-input-box">
+              <input
+                type="text"
+                id="recipe-name"
+                placeholder="name new recipe"
+                {...register("recipe", { required: true })}
+              />
               <label html="product">product</label>
+
               <input
                 type="text"
                 id="product"
