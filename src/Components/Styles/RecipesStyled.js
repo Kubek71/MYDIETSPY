@@ -22,6 +22,9 @@ export const RecipesStyled = styled.div`
     height: 100%;
     width: 100%;
   }
+  .hidden {
+    display: none;
+  }
   h2 {
     display: block;
     text-align: center;
@@ -35,6 +38,9 @@ export const RecipesStyled = styled.div`
     width: 50%;
     display: flex;
     flex-direction: column;
+    @media (max-width: 768px) {
+      width: 100%;
+    }
   }
 
   .recipes-box {
@@ -43,11 +49,12 @@ export const RecipesStyled = styled.div`
 
       .meal-number {
         display: block;
+        margin: 0 auto;
         text-align: center;
         padding: 0.5rem 2rem;
         font-weight: 900;
         font-family: roboto;
-        color: #ee6c45;
+        color: #262626;
       }
 
       .meal-summary {
@@ -86,7 +93,7 @@ export const RecipesStyled = styled.div`
         width: 100%;
 
         thead {
-          color: #65458c;
+          color: #ffce61;
         }
         td {
           padding: 0 1rem;
@@ -118,6 +125,11 @@ export const RecipesStyled = styled.div`
         flex-direction: column;
         padding: 2rem 0;
         gap: 1rem;
+        width: 80%;
+
+        #recipe-name {
+          margin-bottom: 4rem;
+        }
 
         .result-box {
           width: 100%;

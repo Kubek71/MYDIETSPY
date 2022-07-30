@@ -1,6 +1,6 @@
 import React from "react";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { RecipesStyled } from "./Styles/RecipesStyled";
 import { Box } from "./Styles/Box";
@@ -24,7 +24,8 @@ export default function Recipes() {
   const [newRecipe, setNewRecipe] = useState([]);
   const [recipesFromDatabase, setRecipesFromDatabase] = useState([]);
   const [recipeName, setRecipeName] = useState(null);
-  const [showRecipe, setShowRecipe] = useState(false);
+  const [showRecipe, setShowRecipe] = useState("meal-box ");
+  const mealbox = useRef();
   let date = currentDate();
 
   useEffect(() => {
@@ -120,54 +121,50 @@ export default function Recipes() {
               // console.log(Object.entries(element[1])[0][1]);
               return (
                 <Box className="meals-container">
-                  <button
-                    style={{ background: "none", border: "none" }}
+                  <Button
+                    className="meal-number"
                     onClick={() => {
-                      setShowRecipe(!showRecipe);
+                      showRecipe === "meal-box "
+                        ? setShowRecipe((prevState) => prevState + "hidden")
+                        : setShowRecipe("meal-box ");
                     }}
                   >
-                    <Text className="meal-number">
-                      {currentRecipe.toUpperCase()}
-                    </Text>
-                    {showRecipe === true && (
-                      <>
-                        <Box className="meal-box">
-                          {Object.entries(element[1])[0][1].map((meal) => {
-                            return (
-                              <table>
-                                <thead>
-                                  <tr>
-                                    <th>{meal.product_name}</th>
-                                  </tr>
-                                </thead>
-                                <tbody>
-                                  <tr>
-                                    <td>
-                                      <Text>
-                                        serving: {meal.product_serving * 100}
-                                        <strong>G</strong>
-                                      </Text>
-                                    </td>
-                                    <td>
-                                      <Text>
-                                        kcal:{" "}
-                                        <strong>
-                                          {meal.product_kcalInServing}
-                                        </strong>
-                                      </Text>
-                                    </td>
-                                  </tr>
-                                </tbody>
-                              </table>
-                            );
-                          })}
-                        </Box>
-                        <Text className="meal-summary">
-                          TOTAL KCAL IN MEAL: <strong>555</strong>
-                        </Text>
-                      </>
-                    )}
-                  </button>
+                    {currentRecipe.toUpperCase()}
+                  </Button>
+
+                  <Box className={showRecipe} ref={mealbox}>
+                    {Object.entries(element[1])[0][1].map((meal) => {
+                      console.log(meal);
+                      return (
+                        <table>
+                          <thead>
+                            <tr>
+                              <th>{meal.product_name}</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td>
+                                <Text>
+                                  serving: {meal.product_serving * 100}
+                                  <strong>G</strong>
+                                </Text>
+                              </td>
+                              <td>
+                                <Text>
+                                  kcal:{" "}
+                                  <strong>{meal.product_kcalInServing}</strong>
+                                </Text>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      );
+                    })}
+                  </Box>
+                  <Text className="meal-summary">
+                    TOTAL KCAL IN MEAL: <strong>555</strong>
+                  </Text>
                 </Box>
               );
             })}
@@ -179,10 +176,10 @@ export default function Recipes() {
         <Box className="form-container">
           <form onSubmit={handleSubmit(createMeal)}>
             <Box className="product-input-box">
+              <label html="recipe-name">Recipe</label>
               <input
                 type="text"
                 id="recipe-name"
-                placeholder="name new recipe"
                 {...register("recipe", { required: true })}
               />
               <label html="product">product</label>
