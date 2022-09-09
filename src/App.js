@@ -8,31 +8,38 @@ import HomePage from "./Components/HomePage";
 import LandingPage from "./Components/LandingPage";
 import { Container } from "./Components/Styles/Container";
 import { useState } from "react";
+
 import { auth } from './Helpers/FirebaseConfig'
+import { onAuthStateChanged } from 'firebase/auth';
 
 
 function App() {
     // array of choosed products and servings 
-  const [productList, setProductList] = useState([]);
+
   const [isMealSubmited, setIsMealSubmited] = useState(false);
   const [headerHeight, setHeaderHeight] = useState();
-  const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
+  const [authState, setAuthState] = useState(false);
+
+
+  onAuthStateChanged(auth, (user) => {
+    user? setAuthState(true): setAuthState(false);
+  });
 
   return (
     <div className="App">
       <GlobalStyles/>
       {
-        isUserLoggedIn === false && 
-        <LandingPage setIsUserLoggedIn={setIsUserLoggedIn} isUserLoggedIn={isUserLoggedIn}/>
+        authState === false && 
+        <LandingPage/>
       }
       {
-        isUserLoggedIn === true &&
+        authState === true &&
         <BrowserRouter>
         <Header setHeaderHeight={setHeaderHeight} headerHeight={headerHeight}/>
           <Routes>
-            <Route path="/Diary" element={<Diary productList={productList} isMealSubmited={isMealSubmited}/>}/>
+            <Route path="/Diary" element={<Diary isMealSubmited={isMealSubmited}/>}/>
             <Route path="/Recipes" element={<Recipes/>}/>
-            <Route path="/" element={<HomePage productList={productList} setProductList={setProductList} setIsMealSubmited={setIsMealSubmited} isMealSubmited={isMealSubmited}/>} />
+            <Route path="/" element={<HomePage setIsMealSubmited={setIsMealSubmited} isMealSubmited={isMealSubmited}/>} />
           </Routes>
         <Footer/>
       </BrowserRouter>
