@@ -117,8 +117,7 @@ export default function Recipes() {
           {recipesFromDatabase.length > 0 &&
             recipesFromDatabase.map((element, i) => {
               const currentRecipe = element[0];
-              console.log(currentRecipe);
-              // console.log(Object.entries(element[1])[0][1]);
+
               return (
                 <Box className="meals-container">
                   <Button
@@ -134,7 +133,6 @@ export default function Recipes() {
 
                   <Box className={showRecipe} ref={mealbox}>
                     {Object.entries(element[1])[0][1].map((meal) => {
-                      console.log(meal);
                       return (
                         <table>
                           <thead>
