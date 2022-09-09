@@ -56,7 +56,6 @@ export default function Diary(props) {
         });
       });
     }
-    console.log(kcalArray);
   }, [todayMealsList]);
 
   return (
