@@ -74,9 +74,7 @@ export default function HomePage(props) {
     push(
       ref(database, `users/${auth.currentUser.uid}/meals/${date}/`),
       productList
-    ).then((res) => {
-      alert("udalo sie");
-    });
+    ).then((res) => {});
   };
 
   const submitMeal = () => {
