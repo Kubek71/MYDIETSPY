@@ -7,9 +7,8 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { auth, database } from "../Helpers/FirebaseConfig";
-import { ref, set, push, onValue} from "firebase/database";
+import { ref, set, push, onValue } from "firebase/database";
 import { currentDate } from "../Helpers/CurrentDate";
-
 
 export default function HomePage(props) {
   // list od products in meal
@@ -22,9 +21,7 @@ export default function HomePage(props) {
   const [isProductSelected, setIsProductSelected] = useState(false);
   const { register, handleSubmit } = useForm();
   const gramature = 0.01;
-  let date = currentDate()
-
-
+  let date = currentDate();
 
   useEffect(() => {
     // getting data from food API, whenever user types in inputfield
@@ -47,10 +44,6 @@ export default function HomePage(props) {
     count();
   }, [productList]);
 
-  useEffect(() => {
-    console.log(currentDate())
-  },[])
-
   // Adding choosed products to a meal on submitting the form
   const createMeal = (data, event) => {
     setIsProductSelected(true);
@@ -68,8 +61,6 @@ export default function HomePage(props) {
         ),
       },
     ]);
-  
-
 
     //clearing input fields
     Array.from(event.target).find((element) => element.id === "product").value =
@@ -80,11 +71,13 @@ export default function HomePage(props) {
   };
 
   const pushMealToDatabase = () => {
-    push(ref(database, `users/${auth.currentUser.uid}/meals/${date}/`), productList).then((res) => {
-      alert('udalo sie')
+    push(
+      ref(database, `users/${auth.currentUser.uid}/meals/${date}/`),
+      productList
+    ).then((res) => {
+      alert("udalo sie");
     });
-  }
-
+  };
 
   const submitMeal = () => {
     if (productList.length > 0) {
@@ -142,8 +135,8 @@ export default function HomePage(props) {
             />
           </Box>
           <Button type="submit">ADD PRODUCT</Button>
-          <Button>CHOOSE YOUR RECIPE</Button>
         </form>
+        <Button>CHOOSE YOUR RECIPE</Button>
 
         <ProductBox>
           {isProductSelected === true &&
