@@ -7,9 +7,12 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { auth, database } from "../Helpers/FirebaseConfig";
-import { ref, set } from "firebase/database";
+import { ref, set, push, onValue } from "firebase/database";
+import { currentDate } from "../Helpers/CurrentDate";
 
 export default function HomePage(props) {
+  // list od products in meal
+  const [productList, setProductList] = useState([]);
   // keyword from product input
   const [inputKeyword, setInputKeyword] = useState("");
   // product from food API
@@ -18,6 +21,7 @@ export default function HomePage(props) {
   const [isProductSelected, setIsProductSelected] = useState(false);
   const { register, handleSubmit } = useForm();
   const gramature = 0.01;
+  let date = currentDate();
 
   useEffect(() => {
     // getting data from food API, whenever user types in inputfield
@@ -38,7 +42,7 @@ export default function HomePage(props) {
   useEffect(() => {
     // counting amount of kcal whenever array of product lists updates
     count();
-  }, [props.productList]);
+  }, [productList]);
 
   // Adding choosed products to a meal on submitting the form
   const createMeal = (data, event) => {
@@ -46,7 +50,7 @@ export default function HomePage(props) {
     setProduct(null);
     const currentProduct = product[0].food;
     const currentServing = data.serving * gramature;
-    props.setProductList((prevState) => [
+    setProductList((prevState) => [
       ...prevState,
       {
         product_name: currentProduct.label,
@@ -57,6 +61,7 @@ export default function HomePage(props) {
         ),
       },
     ]);
+
     //clearing input fields
     Array.from(event.target).find((element) => element.id === "product").value =
       "";
@@ -65,23 +70,23 @@ export default function HomePage(props) {
     ).value = "";
   };
 
-  // function writeUserData() {
-    
-  //   push(ref(database, `users/${auth.userId}/meals/`), {
-  //     product_name: props.productList.product_name,
-  //     product_kcal: props.productList.product_name,
-  //   });
-  // }
+  const pushMealToDatabase = () => {
+    push(
+      ref(database, `users/${auth.currentUser.uid}/meals/${date}/`),
+      productList
+    ).then((res) => {});
+  };
 
   const submitMeal = () => {
-    if (props.productList.length > 0) {
-      props.setIsMealSubmited(true);
+    if (productList.length > 0) {
       setIsProductSelected(false);
+      pushMealToDatabase();
+      setProductList([]);
     }
   };
 
   const count = () => {
-    const productKcalAmount = props.productList.reduce((totalKcal, element) => {
+    const productKcalAmount = productList.reduce((totalKcal, element) => {
       return Math.floor(totalKcal + element.product_kcalInServing);
     }, 0);
     setCountKcal(productKcalAmount);
@@ -128,12 +133,12 @@ export default function HomePage(props) {
             />
           </Box>
           <Button type="submit">ADD PRODUCT</Button>
-          <Button>CHOOSE YOUR RECIPE</Button>
         </form>
+        <Button>CHOOSE YOUR RECIPE</Button>
 
         <ProductBox>
           {isProductSelected === true &&
-            props.productList.map((element, i) => {
+            productList.map((element, i) => {
               return (
                 <Box key={i}>
                   <Box>
@@ -148,7 +153,7 @@ export default function HomePage(props) {
               );
             })}
         </ProductBox>
-        {props.productList.length > 0 && (
+        {productList.length > 0 && (
           <Button className="newMeal-button" onClick={submitMeal}>
             ADD MEAL
           </Button>
